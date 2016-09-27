@@ -52,6 +52,8 @@ echo ('$status : ' . $uneReservation->getStatus() . '<br>');
 echo ('$digicode : ' . $uneReservation->getDigicode() . '<br>');
 echo ('<br>');
 
+
+
 // test de la méthode toString
 echo ($uneReservation->toString());
 ?>
