@@ -77,7 +77,6 @@ class Reservation
 	}
 	
 	
-	public function 
 	
 } // fin de la classe Reservation
 
