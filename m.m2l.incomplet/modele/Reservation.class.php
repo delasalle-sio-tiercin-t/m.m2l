@@ -77,7 +77,8 @@ class Reservation
 	}
 	
 	public function confirmerReservation($idReservation) { 
-		$res = 'select status from reservation where status = 0';
+		$res = 'select id,status from reservations where id=:id AND status = 0';
+		
 		$req = $this->cnx->prepare($res);
 	}
 	
