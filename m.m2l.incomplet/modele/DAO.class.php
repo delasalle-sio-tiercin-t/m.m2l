@@ -75,6 +75,8 @@ class DAO
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
 	// ------------------------------------------------------------------------------------------------------
 
+	
+	
 	public function annulerReservation($idReservation) {
 		$res = "delete * from mrbs_entry where id = ':id'";
 		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
@@ -84,6 +86,18 @@ class DAO
 		return $ok;
 	}
 
+	public function getReservation($idReservation) {
+		$getres = "Select id from mrbs_entry where id = ':id'";
+		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req1 = $this->cnx->prepare($getres);
+		
+		if (empty(req1))
+			return $req1;
+		else 
+			return null;
+			
+	}
+	
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
