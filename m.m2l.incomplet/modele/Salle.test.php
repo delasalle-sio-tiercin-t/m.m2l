@@ -44,7 +44,7 @@ echo ('$area_name : ' . $uneSalle->getAreaName() . '<br>');
 echo ('<br>');
 
 // test de la méthode toString
-echo ($uneSalle->toString());
+echo ('Résultat de la méthode toString : <br><br>' . $uneSalle->toString());
 ?>
 
 </body>

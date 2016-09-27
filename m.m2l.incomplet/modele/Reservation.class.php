@@ -76,6 +76,8 @@ class Reservation
 		return $msg;
 	}
 	
+	
+	
 } // fin de la classe Reservation
 
 // ATTENTION : on ne met pas de balise de fin de script pour ne pas prendre le risque
