@@ -104,6 +104,9 @@ class DAO
 			
 	}
 	
+	public function getUtilisateur($nomUser) {
+		
+	}
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
