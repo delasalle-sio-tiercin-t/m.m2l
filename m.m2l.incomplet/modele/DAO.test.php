@@ -36,8 +36,8 @@ if ($laReservation) {
 }
 else
 	echo "<p>La réservation 1 n'existe pas !</p>";
-*/
 
+*/
 
 /*
 // test de la méthode aPasseDesReservations -------------------------------------------------------

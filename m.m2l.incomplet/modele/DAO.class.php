@@ -75,8 +75,29 @@ class DAO
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
 	// ------------------------------------------------------------------------------------------------------
 
+	
+	
+	public function annulerReservation($idReservation) {
+		$res = "delete * from mrbs_entry where id = ':id'";
+		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req = $this->cnx->prepare($res);
+		
+		$ok = $req->execute();
+		return $ok;
+	}
 
-
+	public function getReservation($idReservation) {
+		$getres = "Select id from mrbs_entry where id = ':id'";
+		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req1 = $this->cnx->prepare($getres);
+		
+		if (empty(req1))
+			return $req1;
+		else 
+			return null;
+			
+	}
+	
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
@@ -305,6 +326,43 @@ class DAO
 		else
 			return "1";
 	}
+	
+public function getLesSalles() {
+		$getSal = "Select id, room_name,COUNT(*) as nbSalles from mrbs_room ";
+		$req = $this->cnx->prepare($getSal);
+		$req->execute();
+		
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		
+		
+		$nbSalles = utf8_encode($req->nbSalles);
+		echo 'Nombre de salles : '.$nbSalles;
+		
+		// construction d'une collection d'objets Salle
+		$lesSalles = array();
+		// tant qu'une ligne est trouvée :
+		while ($uneLigne)
+		{	// création d'un objet Salle
+		$unId = utf8_encode($uneLigne->id);
+		$unNom = utf8_encode($uneLigne->room_name);
+		
+		
+		$uneSalle = new Salle($unId, $unNom);
+		// ajout de la salle à la collection
+		$lesSalles[] = $uneSalle;
+		// extrait la ligne suivante
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		}
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		// fourniture de la collection
+		
+		return $lesSalles;
+	
+		
+	}
+	
+	
 	
 } // fin de la classe DAO
 
