@@ -76,7 +76,10 @@ class Reservation
 		return $msg;
 	}
 	
-	
+	public function confirmerReservation($idReservation) { 
+		$res = 'select* from reservations where status = 0';
+		$req = $this->cnx->prepare($res);
+	}
 	
 } // fin de la classe Reservation
 

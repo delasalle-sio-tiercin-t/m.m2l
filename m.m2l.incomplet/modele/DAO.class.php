@@ -76,6 +76,12 @@ class DAO
 	// ------------------------------------------------------------------------------------------------------
 
 	
+
+	public function confirmerReservation($idReservation) {
+		$res = "select id from mrbs_entry where id = ':id'";
+		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req = $this->cnx->prepare($res);
+	}
 	
 	public function annulerReservation($idReservation) {
 		$res = "delete * from mrbs_entry where id = ':id'";
@@ -202,27 +208,6 @@ class DAO
 		else
 			return true;
 	}
-	
-	// fournit true si l'utilisateur ($idReservation) existe, false sinon
-	// modifié par Legrand le 04/10/2016
-	public function existeReservation($idReservation)
-	{	// préparation de la requête de recherche
-		$txt_req = "SELECT COUNT(*) FROM mrbs WHERE id = :idReservation";
-		$req = $this->cnx->prepare($txt_req);
-		//liaison de la requête et de ses paramètres
-		$req->bindValue("idReservation",$idReservation,PDO::PARAM_INT);
-		//exécution de la requête 
-		$req->execute();
-		$nbReponses = $req->fetchColumn(0);
-		// libère les ressources du jeu de données
-		$req->closeCursor();
-		
-		// fourniture de la réponse
-		if ($nbReponses == 0)
-			return false;
-			else
-				return true;
-		}
 
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
@@ -347,6 +332,64 @@ class DAO
 		else
 			return "1";
 	}
+	
+public function getLesSalles() {
+		$getSal = "Select id, room_name,COUNT(*) as nbSalles from mrbs_room ";
+		$req = $this->cnx->prepare($getSal);
+		$req->execute();
+		
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		
+		
+		$nbSalles = utf8_encode($req->nbSalles);
+		echo 'Nombre de salles : '.$nbSalles;
+		
+		// construction d'une collection d'objets Salle
+		$lesSalles = array();
+		// tant qu'une ligne est trouvée :
+		while ($uneLigne)
+		{	// création d'un objet Salle
+		$unId = utf8_encode($uneLigne->id);
+		$unNom = utf8_encode($uneLigne->room_name);
+		
+		
+		$uneSalle = new Salle($unId, $unNom);
+		// ajout de la salle à la collection
+		$lesSalles[] = $uneSalle;
+		// extrait la ligne suivante
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		}
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		// fourniture de la collection
+		
+		return $lesSalles;
+	
+		
+	}
+	
+	public function existeReservation($idReservation)
+	{	// préparation de la requete de recherche
+	$txt_req = "Select id from mrbs_entry where id = :idReservation";
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("idReservation", $idReservation, PDO::PARAM_STR);
+	// exécution de la requete
+	$req->execute();
+	$existeRes = $req->fetchColumn(0);
+	// libère les ressources du jeu de données
+	$req->closeCursor();
+	
+	// fourniture de la réponse
+	if ($existeRes == 0)
+		return false;
+		else
+			return true;
+	}
+	
+	
+	
+	
 	
 } // fin de la classe DAO
 
