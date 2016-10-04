@@ -70,6 +70,18 @@ class DAO
 	public function __destruct() {
 		unset($this->cnx);
 	}
+	
+	public function estLeCreateur($nomUser, $idReservation) {
+		$crea = "Select create_by, id from mrbs_entry  where create_by = ':create_by AND id= ':id'";
+		$crea->bindValue("create_by", $nomUser->create_by, PDO::PARAM_INT);
+		$crea->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req = $this->cnx->prepare($crea);
+		$ok = $req->execute();
+		
+		if (!empty($ok))
+			return true;
+		else return false;
+	}
 
 	// ------------------------------------------------------------------------------------------------------
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
@@ -87,12 +99,13 @@ class DAO
 	}
 
 	public function getReservation($idReservation) {
-		$getres = "Select id from mrbs_entry where id = ':id'";
+		$getres = "Select * from mrbs_entry where id = ':id'";
 		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		$req1 = $this->cnx->prepare($getres);
+		$req2 = $req->execute();
 		
-		if (empty(req1))
-			return $req1;
+		if (!empty(req2))
+			return $req2;
 		else 
 			return null;
 			
@@ -202,6 +215,27 @@ class DAO
 		else
 			return true;
 	}
+	
+	// fournit true si l'utilisateur ($idReservation) existe, false sinon
+	// modifié par Legrand le 04/10/2016
+	public function existeReservation($idReservation)
+	{	// préparation de la requête de recherche
+		$txt_req = "SELECT COUNT(*) FROM mrbs WHERE id = :idReservation";
+		$req = $this->cnx->prepare($txt_req);
+		//liaison de la requête et de ses paramètres
+		$req->bindValue("idReservation",$idReservation,PDO::PARAM_INT);
+		//exécution de la requête 
+		$req->execute();
+		$nbReponses = $req->fetchColumn(0);
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		
+		// fourniture de la réponse
+		if ($nbReponses == 0)
+			return false;
+			else
+				return true;
+		}
 
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
