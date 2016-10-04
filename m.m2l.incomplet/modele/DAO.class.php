@@ -202,6 +202,27 @@ class DAO
 		else
 			return true;
 	}
+	
+	// fournit true si l'utilisateur ($idReservation) existe, false sinon
+	// modifié par Legrand le 04/10/2016
+	public function existeReservation($idReservation)
+	{	// préparation de la requête de recherche
+		$txt_req = "SELECT COUNT(*) FROM mrbs WHERE id = :idReservation";
+		$req = $this->cnx->prepare($txt_req);
+		//liaison de la requête et de ses paramètres
+		$req->bindValue("idReservation",$idReservation,PDO::PARAM_INT);
+		//exécution de la requête 
+		$req->execute();
+		$nbReponses = $req->fetchColumn(0);
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		
+		// fourniture de la réponse
+		if ($nbReponses == 0)
+			return false;
+			else
+				return true;
+		}
 
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
