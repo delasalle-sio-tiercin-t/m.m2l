@@ -96,7 +96,7 @@ class DAO
 		$getres = "Select id from mrbs_entry where id = ':id'";
 		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		$req1 = $this->cnx->prepare($getres);
-		
+		$req2 = $req1->execute();
 		if (empty(req1))
 			return $req1;
 		else 
