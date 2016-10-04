@@ -105,7 +105,16 @@ class DAO
 	}
 	
 	public function getUtilisateur($nomUser) {
+		$getuser = "Select * from mrbs_user where name = ':name'";
+		$getuser->bindValue("name", $nomUser->name, PDO::PARAM_INT);
+		$req1 = $this->cnx->prepare($getuser);
+		$req2 = $req1->execute();
 		
+		$msg = "Aucun utilisateur n'a été trouvé";
+		if (empty(req2))
+			return $req2;
+		else
+			return $msg;
 	}
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
