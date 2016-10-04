@@ -88,7 +88,6 @@ class DAO
 	// ------------------------------------------------------------------------------------------------------
 
 	
-	
 	public function annulerReservation($idReservation) {
 		$res = "delete * from mrbs_entry where id = ':id'";
 		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
