@@ -85,8 +85,8 @@ class DAO
 	
 	public function annulerReservation($idReservation) {
 		$res = "delete * from mrbs_entry where id = ':id'";
-		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
-		$req = $this->cnx->prepare($res);
+		$req1 = $this->cnx->prepare($res);
+		$req1->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		
 		$ok = $req->execute();
 		return $ok;
@@ -94,11 +94,11 @@ class DAO
 
 	public function getReservation($idReservation) {
 		$getres = "Select id from mrbs_entry where id = ':id'";
-		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		$req1 = $this->cnx->prepare($getres);
+		$req1->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		$req2 = $req1->execute();
-		if (empty(req1))
-			return $req1;
+		if (empty($req2))
+			return $req2;
 		else 
 			return null;
 			
@@ -106,8 +106,8 @@ class DAO
 	
 	public function getUtilisateur($nomUser) {
 		$getuser = "Select * from mrbs_user where name = ':name'";
-		$getuser->bindValue("name", $nomUser->name, PDO::PARAM_INT);
 		$req1 = $this->cnx->prepare($getuser);
+		$req1->bindValue("name", $nomUser->name, PDO::PARAM_INT);
 		$req2 = $req1->execute();
 		
 		$msg = "Aucun utilisateur n'a été trouvé";
