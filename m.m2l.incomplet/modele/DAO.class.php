@@ -96,7 +96,7 @@ class DAO
 		$getres = "Select id from mrbs_entry where id = ':id'";
 		$getres->bindValue("id", $idReservation->id, PDO::PARAM_INT);
 		$req1 = $this->cnx->prepare($getres);
-		
+		$req2 = $req1->execute();
 		if (empty(req1))
 			return $req1;
 		else 
@@ -104,6 +104,9 @@ class DAO
 			
 	}
 	
+	public function getUtilisateur($nomUser) {
+		
+	}
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
