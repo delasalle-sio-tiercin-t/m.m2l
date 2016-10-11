@@ -86,9 +86,9 @@ class DAO
 		$adr = $req->fetch(PDO::FETCH_OBJ);
 		
 		$sujet = "Mot de passe de l'application Maison des Ligues";
-		$adresse_emetteur = "delasalle.sio.crib@gmail.com";
+		$adresse_emetteur = "delasalle.sio.eleves@gmail.com";
 		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
-		envoyerMail($adr,$sujet,$message,$adresse_emetteur);
+		Outils::envoyerMail($adr,$sujet,$message,$adresse_emetteur);
 		
 	}
 	public function confirmerReservation($idReservation) {
