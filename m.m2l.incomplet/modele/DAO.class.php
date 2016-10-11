@@ -86,61 +86,9 @@ class DAO
 		$adr = $req->fetch(PDO::FETCH_OBJ);
 		
 		$sujet = "Mot de passe de l'application Maison des Ligues";
-		
-		if (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $adr)) // On filtre les serveurs qui rencontrent des bogues.
-		{
-			$passage_ligne = "\r\n";
-		}
-		else
-		{
-			$passage_ligne = "\n";
-		}
-
-		$message_html = "<html><head><meta http-equiv='content-type' content='text/html; charset=utf-8' /></head><body><p>Bonjour Madame,Monsieur " . $nom .", </br>
-conform&eacute;ment &agrave; votre demande, votre mot de passe vient de vous &ecirc;tre renvoy&eacute;. </br>
-Vos Informations :  </br>
-Votre identifiant : ".$adr." </br>
-Votre Mot de Passe : ".$nouveauMdp."</br></p></body></html>";
-		
-		
-		$boundary = "-----=".md5(rand());
-		
-		$header = "From: \"M2L\"<delasalle.sio.crib@gmail.com>".$passage_ligne;
-		$header .= "Reply-to: \"M2L\" <delasalle.sio.crib@gmail.com>".$passage_ligne;
-		$header .= "MIME-Version: 1.0".$passage_ligne;
-		$header .= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
-		
-		
-		//construction de la variable $message, contenant le texte du mail.
-		$message = $passage_ligne."--".$boundary.$passage_ligne;
-		
-		
-		
-		//==========
-		$message.= $passage_ligne."--".$boundary.$passage_ligne;
-		//=====Ajout du message au format HTML
-		$message.= "Content-Type: text/html; charset=\"ISO-8859-1\"".$passage_ligne;
-		$message.= "Content-Transfer-Encoding: 8bit".$passage_ligne;
-		$message.= $passage_ligne.$message_html.$passage_ligne;
-		//==========
-		$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
-		$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
-		//==========
-		
-		// envoi du mail
-		try
-		{
-			mail($adr,$sujet,$message,$header);
-		}
-		catch (exception $e)
-		{
-			echo "	<div id='connexion'>
-				<h3>Réinitialiser le mot de passe</h3>
-				<div id='erreurCo'>
-					<p>La vérification a échoué;, veuillez réessayer ultérieurement</p>
-				</div>
-			</div>";
-		}
+		$adresse_emetteur = "delasalle.sio.crib@gmail.com";
+		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
+		envoyerMail($adr,$sujet,$message,$adresse_emetteur);
 		
 	}
 	public function confirmerReservation($idReservation) {
