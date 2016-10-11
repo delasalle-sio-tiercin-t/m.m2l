@@ -118,14 +118,27 @@ class DAO
 	}
 	
 	public function getUtilisateur($nomUser) {
-		$getuser = "Select * from mrbs_user where name = ':name'";
-		$req1 = $this->cnx->prepare($getuser);
-		$req1->bindValue("name", $nomUser, PDO::PARAM_INT);
-		$req2 = $req1->execute();
+		$txt_req = "Select * from mrbs_user where name = ':name'";
+		$req = $this->cnx->prepare($txt_req);
+		$req->bindValue("name", $nomUser, PDO::PARAM_INT);
+		$req->execute();
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
 		
 		$msg = "Aucun utilisateur n'a été trouvé";
-		if (empty(req2))
-			return $req2;
+		if ($uneLigne)
+		{
+			$unId = utf8_encode($uneLigne->id);
+			$unTimeStamp = utf8_encode($uneLigne->timestamp);
+			$unStartTime = utf8_encode($uneLigne->start_time);
+			$unEndTime = utf8_encode($uneLigne->end_time);
+			$unRoomName = utf8_encode($uneLigne->name);
+			$unStatus = utf8_encode($uneLigne->status);
+			$unDigicode = utf8_encode($uneLigne->digicode);
+			
+			$uneReservation = new Reservation($unId, $unTimeStamp, $unStartTime, $unEndTime, $unRoomName, $unStatus, $unDigicode);
+			$req->closeCursor();
+			return $uneReservation;
+		}
 		else
 			return $msg;
 	}
