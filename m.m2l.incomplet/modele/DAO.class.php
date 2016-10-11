@@ -94,20 +94,20 @@ class DAO
 
 	public function getReservation($idReservation) {
 
-		$txt_req = "Select * from mrbs_entry where id = ':id'";
+		$txt_req = "Select * from mrbs_entry, mrbs_entry_digicode where mrbs_entry.id = :id AND mrbs_entry.id = mrbs_entry_digicode.id";
 		$req = $this->cnx->prepare($txt_req);
 		$req->bindValue("id", $idReservation, PDO::PARAM_INT);
 		$req->execute();
 		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
-		if (!empty($req))
+		if ($uneLigne)
 		{
-			$unId = utf8_encode($uneLigne['id_entry']);
-			$unTimeStamp = utf8_encode($uneLigne['timestamp']);
-			$unStartTime = utf8_encode($uneLigne['start_time']);
-			$unEndTime = utf8_encode($uneLigne['end_time']);
-			$unRoomName = utf8_encode($uneLigne['room_name']);
-			$unStatus = utf8_encode($uneLigne['status']);
-			$unDigicode = utf8_encode($uneLigne['digicode']);
+			$unId = utf8_encode($uneLigne->id);
+			$unTimeStamp = utf8_encode($uneLigne->timestamp);
+			$unStartTime = utf8_encode($uneLigne->start_time);
+			$unEndTime = utf8_encode($uneLigne->end_time);
+			$unRoomName = utf8_encode($uneLigne->name);
+			$unStatus = utf8_encode($uneLigne->status);
+			$unDigicode = utf8_encode($uneLigne->digicode);
 			
 			$uneReservation = new Reservation($unId, $unTimeStamp, $unStartTime, $unEndTime, $unRoomName, $unStatus, $unDigicode);
 			$req->closeCursor();

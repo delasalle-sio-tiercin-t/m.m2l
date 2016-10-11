@@ -205,11 +205,11 @@ if ($laReservation)
 	echo "<p>La réservation 11 existe : <br>" . $laReservation->toString() . "</p>";
 else
 	echo "<p>La réservation 11 n'existe pas !</p>";	
-$laReservation = $dao->getReservation("12");
+$laReservation = $dao->getReservation("2");
 if ($laReservation) 
-	echo "<p>La réservation 12 existe : <br>" . $laReservation->toString() . "</p>";
+	echo "<p>La réservation 2 existe : <br>" . $laReservation->toString() . "</p>";
 else
-	echo "<p>La réservation 12 n'existe pas !</p>";	
+	echo "<p>La réservation 2 n'existe pas !</p>";	
 
 
 
