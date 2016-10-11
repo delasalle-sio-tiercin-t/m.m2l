@@ -120,7 +120,7 @@ class DAO
 	public function getUtilisateur($nomUser) {
 		$getuser = "Select * from mrbs_user where name = ':name'";
 		$req1 = $this->cnx->prepare($getuser);
-		$req1->bindValue("name", $nomUser->name, PDO::PARAM_INT);
+		$req1->bindValue("name", $nomUser, PDO::PARAM_INT);
 		$req2 = $req1->execute();
 		
 		$msg = "Aucun utilisateur n'a été trouvé";
