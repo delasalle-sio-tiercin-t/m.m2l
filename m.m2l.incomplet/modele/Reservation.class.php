@@ -53,7 +53,7 @@ class Reservation
 
 	public function getRoom_name()	{return $this->room_name;}
 	public function setRoom_name($unRoom_name) {$this->room_name = $unRoom_name;}
-	
+	// zizi <3
 	public function getStatus()	{return $this->status;}
 	public function setStatus($unStatus) {$this->status = $unStatus;}
 	
