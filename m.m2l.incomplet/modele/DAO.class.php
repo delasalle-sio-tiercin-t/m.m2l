@@ -166,6 +166,13 @@ class DAO
 			return null;
 	}
 	
+	public function supprimerUtilisateur($nom)
+	{
+		$txt_req = "DELETE FROM mrbs_users WHERE name = :name";
+		$req = $this->cnx->prepare($txt_req);
+		$req->bindValue("name",$nom,PDO::PARAM_STR);
+		$req->execute();
+	}
 	public function modifierMdpUser($nom, $nouveauMdp) {
 		if($this->existeUtilisateur($nom))
 		{
