@@ -79,29 +79,42 @@ class DAO
 
 	public function confirmerReservation($idReservation) {
 		$res = "select id from mrbs_entry where id = ':id'";
-		$res->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$res->bindValue("id", $idReservation, PDO::PARAM_INT);
 		$req = $this->cnx->prepare($res);
 	}
 	
 	public function annulerReservation($idReservation) {
 		$res = "delete * from mrbs_entry where id = ':id'";
 		$req1 = $this->cnx->prepare($res);
-		$req1->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req1->bindValue("id", $idReservation, PDO::PARAM_INT);
 		
-		$ok = $req->execute();
+		$ok = $req1->execute();
 		return $ok;
 	}
 
 	public function getReservation($idReservation) {
-		$getres = "Select id from mrbs_entry where id = :id";
-		$req1 = $this->cnx->prepare($getres);
-		$req1->bindValue(":id", $req1->id, PDO::PARAM_INT);
-		$req2 = $req1->execute();
-		if (empty($req2))
-			return $req2;
-		else 
-			return null;
+
+		$txt_req = "Select * from mrbs_entry where id = ':id'";
+		$req = $this->cnx->prepare($txt_req);
+		$req->bindValue("id", $idReservation, PDO::PARAM_INT);
+		$req->execute();
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		if (!empty($req))
+		{
+			$unId = utf8_encode($uneLigne['id_entry']);
+			$unTimeStamp = utf8_encode($uneLigne['timestamp']);
+			$unStartTime = utf8_encode($uneLigne['start_time']);
+			$unEndTime = utf8_encode($uneLigne['end_time']);
+			$unRoomName = utf8_encode($uneLigne['room_name']);
+			$unStatus = utf8_encode($uneLigne['status']);
+			$unDigicode = utf8_encode($uneLigne['digicode']);
 			
+			$uneReservation = new Reservation($unId, $unTimeStamp, $unStartTime, $unEndTime, $unRoomName, $unStatus, $unDigicode);
+			$req->closeCursor();
+			return $uneReservation;
+		}
+		else 
+			return null;	
 	}
 	
 	public function getUtilisateur($nomUser) {
@@ -116,6 +129,7 @@ class DAO
 		else
 			return $msg;
 	}
+	
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
@@ -146,43 +160,7 @@ class DAO
 		$req1->closeCursor();
 		return;
 	}
-	
-	/*
-	 // mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-	 // cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
-	 // modifié par Jim le 23/9/2015
-	 public function creerLesDigicodesManquants()
-	 {	// récupération de la date du jour
-		 $dateCreation = date('Y-m-d H:i:s', time());
-		 // préparation de la requete de recherche des réservations sans digicode
-		 $txt_req1 = "Select id from mrbs_entry where id not in (select id from mrbs_entry_digicode)";
-		 $req1 = $this->cnx->prepare($txt_req1);
-		 // extraction des données
-		 $req1->execute();
-		 // extrait une ligne du résultat :
-		 $uneLigne = $req1->fetch(PDO::FETCH_OBJ);
-		 // tant qu'une ligne est trouvée :
-		
-		 while ($uneLigne)
-		 {	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
-			 $digicode = $this->genererUnDigicode();
-			 // préparation de la requete d'insertion
-			 $txt_req2 = "insert into mrbs_entry_digicode (id, digicode, dateCreation) values (:id, :digicode, :dateCreation)";
-			 $req2 = $this->cnx->prepare($txt_req2);
-			 // liaison de la requête et de ses paramètres
-			 $req2->bindValue("id", $uneLigne->id, PDO::PARAM_INT);
-			 $req2->bindValue("digicode", $digicode, PDO::PARAM_STR);
-			 $req2->bindValue("dateCreation", $dateCreation, PDO::PARAM_INT);
-			 // exécution de la requête
-			 $req2->execute();
-			 // extrait la ligne suivante
-			 $uneLigne = $req1->fetch(PDO::FETCH_OBJ);
-		 }
-		 // libère les ressources du jeu de données
-		 $req1->closeCursor();
-		 return;
-	 }
-	 */
+
 
 	// enregistre l'utilisateur dans la bdd
 	// modifié par Jim le 26/5/2016
