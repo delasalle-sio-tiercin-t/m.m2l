@@ -215,6 +215,19 @@ Votre Mot de Passe : ".$nouveauMdp."</br></p></body></html>";
 			return null;
 	}
 	
+	public function modifierMdpUser($nom, $nouveauMdp) {
+		if($this->existeUtilisateur($nom))
+		{
+			$txt_req = "UPDATE mrbs_users SET password = :password WHERE name = :name";
+			$req = $this->cnx->prepare($txt_req);
+			$req->bindValue("name", $nom, PDO::PARAM_STR);
+			$req->bindValue("password", md5($nouveauMdp), PDO::PARAM_STR);
+			$ok = $req->execute();
+			return $ok;
+		}
+		else 
+			return false;
+	}
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
