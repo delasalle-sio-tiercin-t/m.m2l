@@ -93,9 +93,9 @@ class DAO
 	}
 
 	public function getReservation($idReservation) {
-		$getres = "Select id from mrbs_entry where id = ':id'";
+		$getres = "Select id from mrbs_entry where id = :id";
 		$req1 = $this->cnx->prepare($getres);
-		$req1->bindValue("id", $idReservation->id, PDO::PARAM_INT);
+		$req1->bindValue(":id", $req1->id, PDO::PARAM_INT);
 		$req2 = $req1->execute();
 		if (empty($req2))
 			return $req2;
