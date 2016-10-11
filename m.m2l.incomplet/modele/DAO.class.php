@@ -79,12 +79,15 @@ class DAO
 	public function envoyerMdp($nom, $nouveauMdp)
 	{
 		
-		$txt_req = ("SELECT email FROM mrbs_users WHERE name = :name");
+		$txt_req = ("SELECT * FROM mrbs_users WHERE name = :name");
 		$req = $this->cnx->prepare($txt_req);
 		$req->bindValue("name", $nom, PDO::PARAM_STR);
 		$req->execute();
-		$adr = $req->fetch(PDO::FETCH_OBJ);
-		
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		if ($uneLigne)
+		{
+			$adr = $uneLigne->email;
+		}
 		$sujet = "Mot de passe de l'application Maison des Ligues";
 		$adresse_emetteur = "delasalle.sio.eleves@gmail.com";
 		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
