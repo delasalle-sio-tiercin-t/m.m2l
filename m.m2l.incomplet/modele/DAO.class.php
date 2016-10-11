@@ -118,29 +118,26 @@ class DAO
 	}
 	
 	public function getUtilisateur($nomUser) {
-		$txt_req = "Select * from mrbs_user where name = ':name'";
+		$txt_req = "Select * from mrbs_users where name = :name";
 		$req = $this->cnx->prepare($txt_req);
-		$req->bindValue("name", $nomUser, PDO::PARAM_INT);
+		$req->bindValue("name", $nomUser, PDO::PARAM_STR);
 		$req->execute();
 		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
 		
-		$msg = "Aucun utilisateur n'a été trouvé";
 		if ($uneLigne)
 		{
 			$unId = utf8_encode($uneLigne->id);
-			$unTimeStamp = utf8_encode($uneLigne->timestamp);
-			$unStartTime = utf8_encode($uneLigne->start_time);
-			$unEndTime = utf8_encode($uneLigne->end_time);
-			$unRoomName = utf8_encode($uneLigne->name);
-			$unStatus = utf8_encode($uneLigne->status);
-			$unDigicode = utf8_encode($uneLigne->digicode);
+			$unLevel = utf8_encode($uneLigne->level);
+			$unName = utf8_encode($uneLigne->name);
+			$unPassword = utf8_encode($uneLigne->password);
+			$unEmail = utf8_encode($uneLigne->email);
 			
-			$uneReservation = new Reservation($unId, $unTimeStamp, $unStartTime, $unEndTime, $unRoomName, $unStatus, $unDigicode);
+			$unUtilisateur = new Utilisateur($unId, $unLevel, $unName, $unPassword, $unEmail);
 			$req->closeCursor();
-			return $uneReservation;
+			return $unUtilisateur;
 		}
 		else
-			return $msg;
+			return null;
 	}
 	
 	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
