@@ -32,7 +32,7 @@ if ( $nom == "" && $mdp == "" )
 
 // initialisation du nombre de réservations
 $nbReponses = 0;
-$lesReservations = array();
+$lesSalles = array();
 
 // Contrôle de la présence des paramètres
 if ( $nom == "" || $mdp == "" )
@@ -47,22 +47,13 @@ else
 		$msg = "Erreur : authentification incorrecte.";
 	else 
 	{	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-		$dao->creerLesDigicodesManquants();
-		
-		// récupération des réservations à venir créées par l'utilisateur
-		$lesReservations = $dao->getLesReservations($nom);
-		$nbReponses = sizeof($lesReservations);
 	
-		if ($nbReponses == 0)
-			$msg = "Erreur : vous n'avez aucune réservation.";
-		else
-			$msg = "Vous avez effectué " . $nbReponses . " réservation(s).";
 	}
 	// ferme la connexion à MySQL
 	unset($dao);
 }
 // création du flux XML en sortie
-creerFluxXML ($msg, $lesReservations);
+creerFluxXML ($msg, $lesSalles);
 
 // fin du programme (pour ne pas enchainer sur la fonction qui suit)
 exit;
@@ -70,7 +61,7 @@ exit;
 
 
 // création du flux XML en sortie
-function creerFluxXML($msg, $lesReservations)
+function creerFluxXML($msg, $lesSalles)
 {	// crée une instance de DOMdocument (DOM : Document Object Model)
 	$doc = new DOMDocument();
 	
@@ -79,7 +70,7 @@ function creerFluxXML($msg, $lesReservations)
 	$doc->encoding = 'ISO-8859-1';
 	
 	// crée un commentaire et l'encode en ISO
-	$elt_commentaire = $doc->createComment('Service web ConsulterReservations - BTS SIO - Lycée De La Salle - Rennes');
+	$elt_commentaire = $doc->createComment('Service web ConsulterSalles - BTS SIO - Lycée De La Salle - Rennes');
 	// place ce commentaire à la racine du document XML
 	$doc->appendChild($elt_commentaire);
 	
