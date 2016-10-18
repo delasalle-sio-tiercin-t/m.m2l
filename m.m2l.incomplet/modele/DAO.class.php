@@ -380,15 +380,17 @@ class DAO
 	}
 	
 public function getLesSalles() {
-		$getSal = "Select id, room_name,COUNT(*) as nbSalles from mrbs_room ";
+		$getNbSalles = "SELECT COUNT(*) AS nbSalles FROM mrbs_room";
+		$req = $this->cnx->prepare($getNbSalles);
+		$ok = $req->execute();
+		
+		$nbSalles = $ok;
+		
+		$getSal = "Select mrbs_room.id, room_name, capacity, area_name from mrbs_room, mrbs_area WHERE mrbs_room.area_id = mrbs_area.id ";
 		$req = $this->cnx->prepare($getSal);
 		$req->execute();
 		
 		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
-		
-		
-		$nbSalles = utf8_encode($req->nbSalles);
-		echo 'Nombre de salles : '.$nbSalles;
 		
 		// construction d'une collection d'objets Salle
 		$lesSalles = array();
@@ -396,10 +398,12 @@ public function getLesSalles() {
 		while ($uneLigne)
 		{	// création d'un objet Salle
 		$unId = utf8_encode($uneLigne->id);
-		$unNom = utf8_encode($uneLigne->room_name);
+		$unRoomName = utf8_encode($uneLigne->room_name);
+		$unCapacity = utf8_encode($uneLigne->capacity);
+		$unAreaName = utf8_encode($uneLigne->area_name);
 		
 		
-		$uneSalle = new Salle($unId, $unNom);
+		$uneSalle = new Salle($unId, $unRoomName, $unCapacity, $unAreaName);
 		// ajout de la salle à la collection
 		$lesSalles[] = $uneSalle;
 		// extrait la ligne suivante
