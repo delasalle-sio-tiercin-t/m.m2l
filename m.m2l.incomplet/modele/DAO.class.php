@@ -1,17 +1,3 @@
-CREATE TABLE IF NOT EXISTS `mrbs_entry_digicode` (
-  `id` int(11) NOT NULL,
-  `digicode` varchar(6) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `mrbs_entry_digicode`
---
-
-INSERT INTO `mrbs_entry_digicode` (`id`, `digicode`) VALUES
-(2, 'B7BDCE'),
-(3, 'EC426D'),
-(11, '3A7111');
 <?php
 // -------------------------------------------------------------------------------------------------------------------------
 //                                                 DAO : Data Access Object
@@ -89,7 +75,23 @@ class DAO
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
 	// ------------------------------------------------------------------------------------------------------
 
-	
+	public function estLeCreateur ($nomUser, $idReservation)
+	{
+		$txt_req = ("SELECT * FROM mrbs_entry WHERE create_by = :name AND id = :id");
+		$req = $this->cnx->prepare($txt_req);
+		$req->bindValue("name", $nomUser, PDO::PARAM_STR);
+		$req->bindValue("id", $idReservation, PDO::PARAM_INT);
+		$req->execute();
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		if ($uneLigne)
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
 	public function envoyerMdp($nom, $nouveauMdp)
 	{
 		
@@ -367,6 +369,34 @@ class DAO
 		// fourniture de la réponse
 		return $reponse;
 	}	
+	
+	public function testerDigicodeBatiment($digicodeSaisi)
+	{	global $DELAI_DIGICODE;
+	// préparation de la requete de recherche
+	$txt_req = "Select count(*)";
+	$txt_req = $txt_req . " from mrbs_entry, mrbs_entry_digicode";
+	$txt_req = $txt_req . " where mrbs_entry.id = mrbs_entry_digicode.id";
+	$txt_req = $txt_req . " and digicode = :digicodeSaisi";
+	$txt_req = $txt_req . " and (start_time - :delaiDigicode) < " . time();
+	$txt_req = $txt_req . " and (end_time + :delaiDigicode) > " . time();
+	
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("digicodeSaisi", $digicodeSaisi, PDO::PARAM_STR);
+	$req->bindValue("delaiDigicode", $DELAI_DIGICODE, PDO::PARAM_INT);
+	
+	// exécution de la requete
+	$req->execute();
+	$nbReponses = $req->fetchColumn(0);
+	// libère les ressources du jeu de données
+	$req->closeCursor();
+	
+	// fourniture de la réponse
+	if ($nbReponses == 0)
+		return "0";
+		else
+			return "1";
+	}
 
 	// teste si le digicode saisi ($digicodeSaisi) correspond bien à une réservation
 	// de la salle indiquée ($idSalle) pour l'heure courante

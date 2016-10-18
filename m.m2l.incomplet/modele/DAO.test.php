@@ -106,7 +106,7 @@ if ($ok)
 else
 	echo "<p>Echec lors de l'envoi du mail !</p>";
 
-/*
+
 // test de la méthode estLeCreateur ---------------------------------------------------------------
 // modifié par Jim le 25/9/2015
 echo "<h3>Test de estLeCreateur : </h3>";
@@ -114,7 +114,7 @@ if ($dao->estLeCreateur("admin", "11")) $estLeCreateur = "oui"; else $estLeCreat
 echo "<p>'admin' a créé la réservation 11 : <b>" . $estLeCreateur . "</b><br>";
 if ($dao->estLeCreateur("zenelsy", "11")) $estLeCreateur = "oui"; else $estLeCreateur = "non";
 echo "'zenelsy' a créé la réservation 11 : <b>" . $estLeCreateur . "</b></p>";
-*/
+
 
 
 
@@ -262,22 +262,22 @@ else
 
 
 
-/*
+
 // test de la méthode testerDigicodeBatiment ------------------------------------------------------
 // modifié par Jim le 28/9/2015
 echo "<h3>Test de testerDigicodeBatiment : </h3>";
 $reponse = $dao->testerDigicodeBatiment("34214E");
 echo "<p>L'appel de testerDigicodeBatiment('34214E') donne : <b>" . $reponse . "</b><br>";
-*/
 
 
-/*
+
+
 // test de la méthode testerDigicodeSalle ---------------------------------------------------------
 // modifié par Jim le 28/9/2015
 echo "<h3>Test de testerDigicodeSalle : </h3>";
 $reponse = $dao->testerDigicodeSalle("15", "410EE4");
 echo "<p>L'appel de testerDigicodeSalle('15', '410EE4') donne : <b>" . $reponse . "</b><br>";
-*/
+
 
 // ferme la connexion à MySQL :
 unset($dao);
