@@ -89,7 +89,8 @@ class DAO
 		$adresse_emetteur = "delasalle.sio.eleves@gmail.com";
 		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
 		Outils::envoyerMail($adr,$sujet,$message,$adresse_emetteur);
-		
+		$ok = $req->execute();
+		return $ok;
 	}
 	public function confirmerReservation($idReservation) {
 		$res = "select * from mrbs_entry where id = :id";
