@@ -84,10 +84,7 @@ class DAO
 		$req->bindValue("name", $nom, PDO::PARAM_STR);
 		$req->execute();
 		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
-		if ($uneLigne)
-		{
-			$adr = $uneLigne->email;
-		}
+		$adr = $uneLigne->email;
 		$sujet = "Mot de passe de l'application Maison des Ligues";
 		$adresse_emetteur = "delasalle.sio.eleves@gmail.com";
 		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
