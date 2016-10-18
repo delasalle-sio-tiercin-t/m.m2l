@@ -255,6 +255,15 @@ class DAO
 			return true;
 	}
 
+	public function aPasseDesReservations($nom)
+	{
+		if ($this->getLesReservations($nom))
+			return true;
+		else
+			return false;
+		
+	}
+	
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
 	public function genererUnDigicode()
