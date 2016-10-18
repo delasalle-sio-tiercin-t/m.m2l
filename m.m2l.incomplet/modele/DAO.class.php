@@ -1,3 +1,17 @@
+CREATE TABLE IF NOT EXISTS `mrbs_entry_digicode` (
+  `id` int(11) NOT NULL,
+  `digicode` varchar(6) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `mrbs_entry_digicode`
+--
+
+INSERT INTO `mrbs_entry_digicode` (`id`, `digicode`) VALUES
+(2, 'B7BDCE'),
+(3, 'EC426D'),
+(11, '3A7111');
 <?php
 // -------------------------------------------------------------------------------------------------------------------------
 //                                                 DAO : Data Access Object
