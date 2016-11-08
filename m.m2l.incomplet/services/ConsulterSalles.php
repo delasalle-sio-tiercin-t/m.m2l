@@ -30,8 +30,7 @@ if ( $nom == "" && $mdp == "" )
 	if ( empty ($_POST ["mdp"]) == true)  $mdp = "";  else   $mdp = $_POST ["mdp"];
 }
 
-// initialisation du nombre de réservations
-$nbReponses = 0;
+// initialisation de la collection des salles
 $lesSalles = array();
 
 // Contrôle de la présence des paramètres
@@ -47,7 +46,13 @@ else
 		$msg = "Erreur : authentification incorrecte.";
 	else 
 	{	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-	
+		$lesSalles = getLesSalles();
+		$nbReponses = sizeof($lesSalles);
+		
+		if ($nbReponses == 0)
+			$msg = "Erreur : Aucune salle n'a été trouvée.";
+		else
+			$msg = $nbReponses . " salles disponibles en réservation :";
 	}
 	// ferme la connexion à MySQL
 	unset($dao);
@@ -86,7 +91,7 @@ function creerFluxXML($msg, $lesSalles)
 	$elt_donnees = $doc->createElement('donnees');
 	$elt_data->appendChild($elt_donnees);
 	
-	// traitement des réservations
+	// traitement des salles
 	if (sizeof($lesSalles) > 0) {
 		foreach ($lesSalles as $uneSalle)
 		{
