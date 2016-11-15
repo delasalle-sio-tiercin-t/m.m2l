@@ -79,14 +79,14 @@
 							$ok = Outils::envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
 							if ( ! $ok ) {
 								// si l'envoi de mail a échoué, réaffichage de la vue avec un message explicatif
-								$message = "Enregistrement effectué.<br>L'envoi du mail à l'utilisateur a rencontré un problème !";
+								$message = "Enregistrement effectué.<br>L'envoi du mail a rencontré un problème !";
 								$typeMessage = 'avertissement';
 								$themeFooter = $themeProbleme;
 								include_once ('vues/VueConfirmerReservation.php');
 							}
 							else {
 								// tout a fonctionné
-								$message = "Enregistrement effectué.<br>Un mail va être envoyé à l'utilisateur !";
+								$message = "Enregistrement effectué.<br>Un mail va vous être envoyé !";
 								$typeMessage = 'information';
 								$themeFooter = $themeNormal;
 								include_once ('vues/VueConfirmerReservation.php');
