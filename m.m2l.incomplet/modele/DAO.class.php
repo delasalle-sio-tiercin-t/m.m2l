@@ -124,12 +124,10 @@ class DAO
 	}
 	
 	public function annulerReservation($idReservation) {
-		$res = "delete * from mrbs_entry where id = :id";
-		$req1 = $this->cnx->prepare($res);
-		$req1->bindValue("id", $idReservation, PDO::PARAM_INT);
-		
-		$ok = $req1->execute();
-		return $ok;
+		$res = "delete from mrbs_entry where id = :id";
+		$req = $this->cnx->prepare($res);
+		$req->bindValue("id", $idReservation, PDO::PARAM_INT);
+		$req->execute();
 	}
 
 	public function getReservation($idReservation) {
