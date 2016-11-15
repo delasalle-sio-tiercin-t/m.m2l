@@ -2,10 +2,10 @@
 // Projet Réservations M2L - version web mobile
 // fichier : controleurs/CtrlCreerUtilisateur.php
 // Rôle : traiter la demande de création d'un nouvel utilisateur
-// Création : 21/10/2015 par JM CARTRON
-// Mise à jour : 2/6/2016 par JM CARTRON
+// Création : 8/11/2016 par LEGRAND Mathieu
+// Mise à jour : 15/11/2016 par Legrand Mathieu
 
-	if ( ! isset ($_POST ["txtName"]) ) {
+	if ( ! isset ($_POST ["txtIdReservation"]) ) {
 		// si les données n'ont pas été postées, c'est le premier appel du formulaire : affichage de la vue sans message d'erreur
 		$idReservation = '';
 		$name = '';
@@ -16,8 +16,8 @@
 	}
 	else {
 		// récupération des données postées
-		if ( empty ($_POST ["txtName"]) == true)  $idReservation = "";  else   $idReservation = $_POST ["txtName"];
-		if (isset ($_SESSION['name'])) $name = $_SESSION['name']; 
+		if ( empty ($_POST ["txtIdReservation"]) == true)  $idReservation = "";  else   $idReservation = $_POST ["txtIdReservation"];
+		if (isset ($_SESSION["nom"])) $name = $_SESSION["nom"]; 
 		// inclusion de la classe Outils pour utiliser les méthodes statiques estUneAdrMailValide et creerMdp
 		include_once ('modele/Outils.class.php');
 		
@@ -52,7 +52,7 @@
 				else {
 					$reservation = $dao->getReservation($idReservation);
 					$status = $reservation->getStatus();
-					if ($status = 0) {
+					if ($status == 0) {
 						$message = "Erreur : cette réservation a déjà été confirmée !";
 						$typeMessage = 'avertissement';
 						$themeFooter = $themeProbleme;
@@ -60,8 +60,7 @@
 					}
 					else {
 						$date = $reservation->getEnd_time();
-						$timestamp = strtotime($date);
-						if ($timestamp < time()){
+						if ($date < time()){
 							$message = "Erreur : cette réservation est déjà passée !";
 							$typeMessage = 'avertissement';
 							$themeFooter = $themeProbleme;
@@ -70,9 +69,13 @@
 						else {
 							// envoi d'un mail de confirmation de l'enregistrement
 							$sujet = "Confirmation de la réservation numéro " . $idReservation;
-							$contenuMail = "La réservation numéro ." . $idReservation . " a été confirmée. \n\n";
-
-						
+							$contenuMail = "La réservation numéro " . $idReservation . " a été confirmée. \n\n";
+							//récupération de l'utilisateur associé au nom
+							$unUtilisateur = $dao->getUtilisateur($name);
+							
+							//récupération du mail de l'utilisateur
+							$adrMail = $unUtilisateur->getEmail();
+							$dao->confirmerReservation($idReservation);
 							$ok = Outils::envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
 							if ( ! $ok ) {
 								// si l'envoi de mail a échoué, réaffichage de la vue avec un message explicatif
