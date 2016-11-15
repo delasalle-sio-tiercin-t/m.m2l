@@ -103,7 +103,7 @@ class DAO
 		$adr = $uneLigne->email;
 		$sujet = "Mot de passe de l'application Maison des Ligues";
 		$adresse_emetteur = "delasalle.sio.eleves@gmail.com";
-		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp;
+		$message = "Voici votre nouveau mot de passe : ".$nouveauMdp . ". Vous êtes invité à changer rapidement de mot de passe, car celui-ci est faible.";
 		Outils::envoyerMail($adr,$sujet,$message,$adresse_emetteur);
 		$ok = $req->execute();
 		return $ok;
