@@ -1,10 +1,10 @@
 <?php
 	// Projet Réservations M2L - version web mobile
 	// fichier : vues/VueCreerUtilisateur.php
-	// Rôle : visualiser la demande de création d'un nouvel utilisateur
-	// cette vue est appelée par le contôleur controleurs/CtrlCreerUtilisateur.php
-	// Création : 12/10/2015 par JM CARTRON
-	// Mise à jour : 2/6/2016 par JM CARTRON
+	// Rôle : visualiser la demande de nouveau mot de passe
+	// cette vue est appelée par le contôleur controleurs/CtrlDemanderMdp.php
+	// Création : 15/11/2016 par Mathieu LEGRAND
+	// Mise à jour : 15/11/2016 par Mathieu LEGRAND
 ?>
 <!doctype html>
 <html>
@@ -30,14 +30,14 @@
 			</div>
 			
 			<div data-role="content">
-				<h4 style="text-align: center; margin-top: 0px; margin-bottom: 0px;">Confirmer une réservation</h4>
-				<form action="index.php?action=ConfirmerReservation" method="post" data-ajax="false">
+				<h4 style="text-align: center; margin-top: 0px; margin-bottom: 0px;">Demander un nouveau mot de passe</h4>
+				<form action="index.php?action=DemanderMdp" method="post" data-ajax="false">
 					<div data-role="fieldcontain" class="ui-hide-label">
-						<label for="txtIdReservation">Numéro de réservation :</label>
-						<input type="text" name="txtIdReservation" id="txtIdReservation" required placeholder="Entrez le numéro de la réservation..." value="<?php echo $idReservation; ?>">
+						<label for="txtName">Utilisateur :</label>
+						<input type="text" name="txtName" id="txtName" required placeholder="Entrez votre nom" value="<?php echo $name; ?>">
 					</div>
 					<div data-role="fieldcontain">
-						<input type="submit" name="btnConfirmerReservation" id="btnConfirmerReservation" value="Confirmer la réservation" data-mini="true">
+						<input type="submit" name="btnDemanderMdp" id="btnDemanderMdp" value="M'envoyer le nouveau mot de passe" data-mini="true">
 					</div>
 				</form>
 
