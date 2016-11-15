@@ -35,13 +35,13 @@
 			// tester si la case est cochée
 			if ( $("#caseAfficherMdp").is(":checked") ) {
 				// la zone passe en <input type="text">
-				$('#txtNewMotDePasse').attr('type', 'text');
-				$('#txtConfNewMotDePasse').attr('type', 'text');
+				$('#txtNewMdp').attr('type', 'text');
+				$('#txtConfNewMdp').attr('type', 'text');
 			}
 			else {
 				// la zone passe en <input type="password">
-				$('#txtNewMotDePasse').attr('type', 'password');
-				$('#txtConfNewMotDePasse').attr('type', 'password');
+				$('#txtNewMdp').attr('type', 'password');
+				$('#txtConfMdp').attr('type', 'password');
 			};
 		}
 		</script>
@@ -52,17 +52,19 @@
 			<div data-role="header" data-theme="<?php echo $themeNormal; ?>">
 				<h4>M2L-GRR</h4>
 				<a href="index.php?action=Menu" data-transition="<?php echo $transition; ?>">Retour menu</a>
+			
 			</div>
+			<center><h3>Modifier mon mot de passe</h3></center>
 						<form name="form1" id="form1" action="index.php?action=Connecter" data-ajax="false" method="post" data-transition="flip">
 							<div data-role="fieldcontain" class="ui-hide-label ui-field-contain">
-								<label for="txtAncienMdp">Ancien mot de passe :</label>
-								<div ><input name="txtAncienMdp" id="txtAncienMdp" data-mini="true" placeholder="Mon ancien mot de passe" required value="<?php echo $Amdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
-		
-								<label for="txtNewMotDePasse">Nouveau Mot de passe :</label>
-								<div><input name="txtNewMotDePasse" id="txtNewMotDePasse" data-mini="true" required placeholder="Mon nouveau mot de passe" value="<?php echo $Nmdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
 								
-								<label for="txtConfNewMotDePasse">Confirmation mot de passe :</label>
-								<div><input name="txtConfNewMotDePasse" id="txtConfNewMotDePasse" data-mini="true" required placeholder="confirmation nouveau mot de passe" value="<?php echo $NCmdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
+								<t>Nouveau mot de passe :</t>
+								<label for="txtNewMdp">Nouveau Mot de passe :</label>
+								<div><input name="txtNewMdp" id="txtNewMdp" data-mini="true" required placeholder="Mon nouveau mot de passe" value="<?php echo $nouveauMdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div></br>
+								
+								<t>Confirmation nouveau mot de passe :</t>
+								<label for="txtCNMdp">Confirmation mot de passe :</label>
+								<div><input name="txtCNMdp" id="txtCNMdp" data-mini="true" required placeholder="confirmation nouveau mot de passe" value="<?php echo $CNmdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
 							</div>	
 																				
 							<div data-role="fieldcontain" data-type="horizontal" class="ui-hide-label">						
