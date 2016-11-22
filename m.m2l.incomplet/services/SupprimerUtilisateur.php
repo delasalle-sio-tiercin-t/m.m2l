@@ -54,6 +54,12 @@ if ( $nomAdmin == "" || $mdpAdmin == "" || $name == "" ) {
 				$msg = "Erreur : nom d'utilisateur inexistant.";
 			}
 			else {
+				if ( $dao->aPasseDesReservations($name))
+				{
+					$msg = "Erreur : cet utilisateur à passé des réservations";
+				}
+				else 
+				{
 				$unUtilisateur = $dao->getUtilisateur($name);
 				$adrMail = $unUtilisateur->getEmail();
 				// supprime l'utilisateur dans la bdd
@@ -81,7 +87,7 @@ if ( $nomAdmin == "" || $mdpAdmin == "" || $name == "" ) {
 		// ferme la connexion à MySQL :
 		unset($dao);
 	}
-
+}
 // création du flux XML en sortie
 creerFluxXML ($msg);
 
