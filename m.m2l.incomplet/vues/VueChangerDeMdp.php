@@ -64,7 +64,7 @@
 								
 								<t>Confirmation nouveau mot de passe :</t>
 								<label for="txtCNMdp">Confirmation mot de passe :</label>
-								<div><input name="txtCNMdp" id="txtCNMdp" data-mini="true" required placeholder="confirmation nouveau mot de passe" value="<?php echo $CNmdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
+								<div><input name="txtCNMdp" id="txtCNMdp" data-mini="true" required placeholder="confirmation nouveau mot de passe" value="<?php echo $CNMdp; ?>" type="<?php if($afficherMdp == 'on') echo 'text'; else echo 'password'; ?>"></div>
 							</div>	
 																				
 							<div data-role="fieldcontain" data-type="horizontal" class="ui-hide-label">						

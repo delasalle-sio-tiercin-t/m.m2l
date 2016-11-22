@@ -1,7 +1,7 @@
 <?php
 // Service web du projet Réservations M2L
-// Ecrit le 31/3/2016 par Jim
-// Modifié le 3/6/2016 par Jim
+// Ecrit le 22/11/2016 par Mathieu LEGRAND
+// Modifié le 22/11/2016 par Mathieu LEGRAND
 
 // Ce service web permet à un utilisateur de consulter ses réservations à venir
 // et fournit un flux XML contenant un compte-rendu d'exécution
@@ -31,6 +31,7 @@ if ( $nom == "" && $mdp == "" )
 }
 
 // initialisation de la collection des salles
+$nbReponses = 0;
 $lesSalles = array();
 
 // Contrôle de la présence des paramètres
@@ -45,8 +46,8 @@ else
 	if ( $dao->getNiveauUtilisateur($nom, $mdp) == "inconnu" )
 		$msg = "Erreur : authentification incorrecte.";
 	else 
-	{	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-		$lesSalles = getLesSalles();
+	{	// on récupère la collection des salles
+		$lesSalles = $dao->getLesSalles();
 		$nbReponses = sizeof($lesSalles);
 		
 		if ($nbReponses == 0)
@@ -101,13 +102,14 @@ function creerFluxXML($msg, $lesSalles)
 			$elt_donnees->appendChild($elt_salle);
 		
 			// crée les éléments enfants de l'élément 'reservation'
-			$elt_name         = $doc->createElement('room_name', $uneSalle->getRoom_name());
-			$elt_reservation->appendChild($elt_name);
+			$elt_id = $doc->CreateElement('id', $uneSalle->getId());
+			$elt_salle->appendChild($elt_id);
+			$elt_name = $doc->createElement('room_name', $uneSalle->getRoom_name());
+			$elt_salle->appendChild($elt_name);
 			$elt_area_name  = $doc->createElement('area_name', $uneSalle->getAreaName());
-			$elt_reservation->appendChild($elt_area_name);
+			$elt_salle->appendChild($elt_area_name);
 			$elt_capacity = $doc->createElement('capacity', $uneSalle->getCapacity());
-			$elt_reservation->appendChild($elt_capacity);
-		
+			$elt_salle->appendChild($elt_capacity);		
 		}
 	}
 	
