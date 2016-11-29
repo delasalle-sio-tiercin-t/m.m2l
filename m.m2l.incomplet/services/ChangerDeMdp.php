@@ -1,7 +1,7 @@
 <?php
 // Service web du projet Réservations M2L
 // Ecrit le 22/11/2016 par LEGRAND Mathieu
-// Modifié le 2/6/2016 par LEGRAND Mathieu
+// Modifié le 22/11/2016 par LEGRAND Mathieu
 
 // Ce service web permet à un administrateur authentifié d'enregistrer un nouvel utilisateur
 // et fournit un compte-rendu d'exécution
@@ -21,74 +21,59 @@ include_once ('../modele/parametres.localhost.php');
 // Récupération des données transmises
 // la fonction $_GET récupère une donnée passée en paramètre dans l'URL par la méthode GET
 if ( empty ($_GET ["nom"]) == true)  $nom = "";  else   $nom = $_GET ["nom"];
-if ( empty ($_GET ["mdp"]) == true)  $mdp = "";  else   $mdp = $_GET ["mdp"];
-if ( empty ($_GET ["numreservation"]) == true)  $numReservation = "";  else   $numReservation = $_GET ["numreservation"];
-
+if ( empty ($_GET ["ancienMdp"]) == true)  $ancienMdp = "";  else   $ancienMdp = $_GET ["ancienMdp"];
+if ( empty ($_GET ["nouveauMdp"]) == true)  $nouveauMdp = "";  else   $nouveauMdp = $_GET ["nouveauMdp"];
+if ( empty ($_GET ["confirmationMdp"]) == true)  $confirmationMdp = "";  else   $confirmationMdp = $_GET ["confirmationMdp"];
 
 // si l'URL ne contient pas les données, on regarde si elles ont été envoyées par la méthode POST
 // la fonction $_POST récupère une donnée envoyées par la méthode POST
-if ( $nom == "" && $mdp == "" && $numReservation == "") {
-	if ( empty ($_GET ["nom"]) == true)  $nom = "";  else   $nom = $_GET ["nom"];
-if ( empty ($_GET ["mdp"]) == true)  $mdp = "";  else   $mdp = $_GET ["mdp"];
-if ( empty ($_GET ["numreservation"]) == true)  $numReservation = "";  else   $numReservation = $_GET ["numerservation"];
+if ( $nom == "" && $ancienMdp == "" && $nouveauMdp == "" && $confirmationMdp == "" ) {
+	if ( empty ($_POST ["nom"]) == true)  $nom = "";  else   $nom = $_POST ["nom"];
+	if ( empty ($_POST ["ancienMdp"]) == true)  $ancienMdp = "";  else   $ancienMdp = $_POST ["ancienMdp"];
+	if ( empty ($_POST ["nouveauMdp"]) == true)  $nouveauMdp = "";  else   $nouveauMdp = $_POST ["nouveauMdp"];
+	if ( empty ($_POST ["confirmationMdp"]) == true)  $confirmationMdp = "";  else   $confirmationMdp = $_POST ["confirmationMdp"];
 }
 
 // Contrôle de la présence des paramètres
-if ( $nom == "" || $mdp == "" || $numReservation == "") {
+if ( $nom == "" || $ancienMdp == "" || $nouveauMdp == "" || $confirmationMdp == "") {
 	$msg = "Erreur : données incomplètes ou incorrectes.";
 }
-	else {
+	else 
+	{
+		if ($nouveauMdp != $confirmationMdp) {
+			$msg = "Erreur : le mot de passe et sa confirmation sont différents";
+		}
+		else 
+		{
 		// connexion du serveur web à la base MySQL ("include_once" peut être remplacé par "require_once")
 		include_once ('../modele/DAO.class.php');
 		$dao = new DAO();
 
-		if (! $dao->existeUtilisateur($nom) || !($dao->getNiveauUtilisateur($nom,$mdp) != "0" && $dao->getNiveauUtilisateur($nom,$mdp) != "1" && $dao->getNiveauUtilisateur($nom,$mdp) != "2")) 
-		{
-			$msg = "Erreur : authentification incorrecte.";
-		}
-		else
-		{
-			if (! $dao->existeReservation($numReservation) ) {
-				$msg = "Erreur : la réservation n'existe pas !";
+			if (! $dao->existeUtilisateur($nom) || !($dao->getNiveauUtilisateur($nom,$ancienMdp) != "0" && $dao->getNiveauUtilisateur($nom,$ancienMdp) != "1" && $dao->getNiveauUtilisateur($nom,$ancienMdp) != "2")) {
+				$msg = "Erreur : authentification incorrecte.";
 			}
-			else {
-				// On vérifie si la personne est bien l'auteur de la réservation
-				$ok = $dao->estLeCreateur($nom,$numReservation);
-				if ( ! $ok ) {
-					$msg = "Erreur : vous n'êtes pas l'auteur de cette réservation !";
+				else 
+				{
+				$unUtilisateur = $dao->getUtilisateur($nom);
+				$adrMail = $unUtilisateur->getEmail();
+				// supprime l'utilisateur dans la bdd
+				$ok = $dao->modifierMdpUser($nom, $nouveauMdp);
+				if (!$ok) {
+					$msg = "Erreur : problème lors du changement de mot de passe de l'utilisateur.";
 				}
 				else {
-					//on vérifie si la réservation a déjà été confirmée
-					$reservation = $dao->getReservation($numReservation);
-					$status = $reservation->getStatus();
-					if ($status == 0) {
-						$msg = "Erreur : cette réservation a déjà été confirmée !";
+					// envoi d'un mail de confirmation de l'enregistrement
+					$sujet = "Modification du mot de passe de votre compte dans le système de réservation de M2L";
+					$contenuMail = "L'administrateur du système de réservations de la M2L vient de changer le mot de passe de votre compte utilisateur, qui est à présent " .$nouveauMdp. "\n\n";
+						
+					$ok = Outils::envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
+					if ( ! $ok ) {
+						// l'envoi de mail a échoué
+						$msg = "Enregistrement effectué ; l'envoi du mail à l'utilisateur a rencontré un problème.";
 					}
 					else {
-					// on vérifie si la réservation est déjà passée 
-					$date = $reservation->getEnd_time();
-						if ($date < time()){
-								$msg = "Erreur : cette réservation est déjà passée !";
-						}
-						else 
-						{	
-							$dao->confirmerReservation($numReservation);
-							$unUtilisateur = $dao->getUtilisateur($nom);
-							$email = $unUtilisateur->getEmail();
-							// envoi d'un mail de confirmation de l'enregistrement
-							$sujet = "Confirmation de la réservation numéro " . $numReservation;
-							$contenuMail = "La réservation numéro ." . $numReservation . " a été confirmée. \n\n";
-						
-							$ok = Outils::envoyerMail($email, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
-							if ( ! $ok ) {
-								// l'envoi de mail a échoué
-								$msg = "Enregistrement effectué ; l'envoi du mail à l'utilisateur a rencontré un problème.";
-							}
-							else {
-								// tout a bien fonctionné
-								$msg = "Enregistrement effectué ; un mail va être envoyé à l'utilisateur.";
-							}
-						}
+						// tout a bien fonctionné
+						$msg = "Enregistrement effectué ; un mail va être envoyé à l'utilisateur.";
 					}
 				}
 			}
@@ -96,7 +81,7 @@ if ( $nom == "" || $mdp == "" || $numReservation == "") {
 		// ferme la connexion à MySQL :
 		unset($dao);
 	}
-
+  
 // création du flux XML en sortie
 creerFluxXML ($msg);
 
