@@ -68,7 +68,7 @@
 						include_once ('vues/VueDemanderMdp.php');
 					}
 				}
-			}
+
 			unset($dao);		// fermeture de la connexion à MySQL
 		}
 	
