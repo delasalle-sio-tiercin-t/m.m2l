@@ -73,7 +73,7 @@ if ( $nom == "" || $ancienMdp == "" || $nouveauMdp == "" || $confirmationMdp == 
 					}
 					else {
 						// tout a bien fonctionné
-						$msg = "Enregistrement effectué ; un mail va être envoyé à l'utilisateur.";
+						$msg = "Enregistrement effectué ; vous allez recevoir un mail de confirmation.";
 					}
 				}
 			}

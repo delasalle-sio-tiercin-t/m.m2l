@@ -42,7 +42,7 @@ if ( $nom == "" || $mdp == "" || $numReservation == "") {
 		include_once ('../modele/DAO.class.php');
 		$dao = new DAO();
 
-		if (! $dao->existeUtilisateur($nom) || !($dao->getNiveauUtilisateur($nom,$mdp) != "0" && $dao->getNiveauUtilisateur($nom,$mdp) != "1" && $dao->getNiveauUtilisateur($nom,$mdp) != "2")) 
+		if (!$dao->existeUtilisateur($nom) || !($dao->getNiveauUtilisateur($nom,$mdp) != "0" && $dao->getNiveauUtilisateur($nom,$mdp) != "1" && $dao->getNiveauUtilisateur($nom,$mdp) != "2")) 
 		{
 			$msg = "Erreur : authentification incorrecte.";
 		}

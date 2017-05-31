@@ -56,7 +56,7 @@ if ( $nomAdmin == "" || $mdpAdmin == "" || $name == "" ) {
 			else {
 				if ( $dao->aPasseDesReservations($name))
 				{
-					$msg = "Erreur : cet utilisateur à passé des réservations";
+					$msg = "Erreur : cet utilisateur a passé des réservations à venir.";
 				}
 				else 
 				{

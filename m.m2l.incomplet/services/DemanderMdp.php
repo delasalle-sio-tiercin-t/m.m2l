@@ -28,8 +28,6 @@ if ( $nom == "")
 {	if ( empty ($_POST ["nom"]) == true)  $nom = "";  else   $nom = $_POST ["nom"];
 }
 
-
-$unUtilisateur = "";
 // Contrôle de la présence des paramètres
 if ($nom == "") {
 	// si les données sont incorrectes ou incomplètes, réaffichage de la vue de suppression avec un message explicatif
@@ -40,18 +38,21 @@ else
 	include_once ('../modele/DAO.class.php');
 	$dao = new DAO();
 	
-	if ( $dao->getUtilisateur($nom) == ""){
-		$msg = 'Données incomplètes ou incorrectes !';
+	$unUtilisateur = $dao->getUtilisateur($nom);
+	if ( $unUtilisateur == null){
+		$msg = "Erreur : nom d'utilisateur inexistant.";
 	}
 	else 
-	{	// on récupère la collection des utilisateurs
-		$unUtilisateur = $dao->getUtilisateur($nom);
-		$mdpUtilisateur = $unUtilisateur->getPassword();
+	{	// on récupère les données de l'utilisateur
 		$email = $unUtilisateur->getEmail();
+		
+		// création d'un nouveau mot de passe
+		$nouveauMdp = Outils::creerMdp();
+		$dao->modifierMdpUser($nom, $nouveauMdp);
 		
 		// envoi d'un mail de confirmation de l'enregistrement
 		$sujet = $nom.", votre nouveau mot de passe à été envoyé.";
-		$contenuMail = "Nouveau mot de passe :" . $mdpUtilisateur;
+		$contenuMail = "Nouveau mot de passe :" . $nouveauMdp;
 	
 		$ok = Outils::envoyerMail($email, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
 		if ( ! $ok ) {
@@ -83,7 +84,7 @@ $doc->version = '1.0';
 $doc->encoding = 'ISO-8859-1';
 
 // crée un commentaire et l'encode en ISO
-$elt_commentaire = $doc->createComment('Service web CreerUtilisateur - BTS SIO - Lycée De La Salle - Rennes');
+$elt_commentaire = $doc->createComment('Service web DemanderMdp - BTS SIO - Lycée De La Salle - Rennes');
 // place ce commentaire à la racine du document XML
 $doc->appendChild($elt_commentaire);
 
