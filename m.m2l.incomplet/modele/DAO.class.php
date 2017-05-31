@@ -247,6 +247,24 @@ class DAO
 		$ok = $req->execute();
 		return $ok;
 	}
+	
+	//enregistre un échec de connexion dans la bdd
+	//modifié par LEGRAND Mathieu le 31/5/2017
+	public function creerEchec($unEchec)
+	{	// préparation de la requête
+		$txt_req = "insert into mrbs_echecs_cnx values (:id, :date, :name, :password, :adresseIP, :raisonRefus)";
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de ses paramètres
+		$req->bindValue("id", utf8_decode($unEchec->getId()), PDO::PARAM_INT);
+		$req->bindValue("date", utf8_decode($unEchec->getDate()), PDO::PARAM_STR);
+		$req->bindValue("name", utf8_decode($unEchec->getName()), PDO::PARAM_STR);
+		$req->bindValue("password", utf8_decode(md5($unEchec->getPassword())), PDO::PARAM_STR);
+		$req->bindValue("adresseIP", utf8_decode($unEchec->getAdresseIP()), PDO::PARAM_STR);
+		$req->bindValue("raisonRefus", utf8_decode($unEchec->getRaisonRefus()), PDO::PARAM_STR);
+		// exécution de la requete
+		$ok = $req->execute();
+		return $ok;
+		}
 
 	// fournit true si l'utilisateur ($nomUser) existe, false sinon
 	// modifié par Jim le 5/5/2015
